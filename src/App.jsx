@@ -42,17 +42,37 @@ function App() {
     ]);
     // localStorage.setItem("lessonArr", JSON.stringify(newArr));
   };
+  const deleteRow = (index) => {
+    const newArr = lessonArr.filter((_, i) => i !== index);
+    setlessonArr(newArr);
+    localStorage.setItem("lessonArr", JSON.stringify(newArr));
+  };
 
   const changeLessonData = (e, index, day) => {
-    e.preventDefault();
     const newArr = [...lessonArr];
     newArr[index] = {
       ...newArr[index],
-      [day]: e.target.value,
+      [day]: {
+        lesson: e.target.value,
+        hyperLink: newArr[index][day].hyperLink,
+      },
     };
     setlessonArr(newArr);
-    //console.log(lessonArr);
     localStorage.setItem("lessonArr", JSON.stringify(newArr));
+  };
+
+  const changeLessonLinkData = (e, index, day) => {
+    const newArr = [...lessonArr];
+    newArr[index] = {
+      ...newArr[index],
+      [day]: {
+        lesson: newArr[index][day].lesson,
+        hyperLink: e.target.value,
+      },
+    };
+    setlessonArr(newArr);
+    localStorage.setItem("lessonArr", JSON.stringify(newArr));
+    
   };
 
   const changeTimeData = (e, index, timePos) => {
@@ -79,6 +99,17 @@ function App() {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   };
+
+  const importFromJson = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const lessonArr = JSON.parse(e.target.result);
+      setlessonArr(lessonArr);
+      localStorage.setItem("lessonArr", JSON.stringify(lessonArr));
+    };
+    reader.readAsText(file);
+  };
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -95,6 +126,8 @@ function App() {
             }}
           />
           <button onClick={exportToJson}>Export to Json</button>
+          <label htmlFor="fileInput">Add file</label>
+          <input type="file" name="fileInput" onChange={importFromJson}/>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -122,6 +155,9 @@ function App() {
               </th>
               <th scope="col" className="px-6 py-3">
                 {`Субота`}
+              </th>
+              <th scope="col" className="px-6 py-3">
+                {`Дія`}
               </th>
             </tr>
           </thead>
@@ -166,7 +202,7 @@ function App() {
                   <input
                     type="text"
                     className="border-black	border-2"
-                    defaultValue={lesson.monday.lesson}
+                    value={lesson.monday.lesson}
                     onChange={(e) => {
                       changeLessonData(e, index, "monday");
                     }}
@@ -175,9 +211,9 @@ function App() {
                     <input
                       type="text"
                       placeholder="hyperLink"
-                      defaultValue={lesson?.hyperLink}
+                      value={lesson?.hyperLink}
                       onChange={(e) => {
-                        changeLessonData(e, index, "hyperLink");
+                        changeLessonLinkData(e, index, "monday");
                       }}
                     />
                   )}
@@ -187,55 +223,108 @@ function App() {
                   <input
                     type="text"
                     className="border-black	border-2"
-                    defaultValue={lesson.tuesday.lesson}
+                    value={lesson.tuesday.lesson}
                     onChange={(e) => {
                       changeLessonData(e, index, "tuesday");
                     }}
                   />
+                   {isHyperLink && (
+                    <input
+                      type="text"
+                      placeholder="hyperLink"
+                      value={lesson?.tuesday?.hyperLink }
+                      onChange={(e) => {
+                        changeLessonLinkData(e, index, "tuesday");
+                      }}
+                    />
+                  )}
                 </td>
                 {/* wednesday */}
                 <td className="px-6 py-4">
                   <input
                     type="text"
                     className="border-black	border-2"
-                    defaultValue={lesson.wednesday.lesson}
+                    value={lesson.wednesday.lesson}
                     onChange={(e) => {
                       changeLessonData(e, index, "wednesday");
                     }}
                   />
+                  {isHyperLink && (
+                    <input
+                      type="text"
+                      placeholder="hyperLink"
+                      value={lesson?.wednesday?.hyperLink }
+                      onChange={(e) => {
+                        changeLessonLinkData(e, index, "wednesday");
+                      }}
+                    />
+                  )}
                 </td>
                 {/* thursday */}
                 <td className="px-6 py-4">
                   <input
                     type="text"
                     className="border-black	border-2"
-                    defaultValue={lesson.thursday.lesson}
+                    value={lesson.thursday.lesson}
                     onChange={(e) => {
                       changeLessonData(e, index, "thursday");
                     }}
                   />
+                  {isHyperLink && (
+                    <input
+                      type="text"
+                      placeholder="hyperLink"
+                      value={lesson?.thursday?.hyperLink }
+                      onChange={(e) => {
+                        changeLessonLinkData(e, index, "thursday");
+                      }}
+                    />
+                  )}
                 </td>
                 {/* friday */}
                 <td className="px-6 py-4">
                   <input
                     type="text"
                     className="border-black	border-2"
-                    defaultValue={lesson.friday.lesson}
+                    value={lesson.friday.lesson}
                     onChange={(e) => {
                       changeLessonData(e, index, "friday");
                     }}
                   />
+                  {isHyperLink && (
+                    <input
+                      type="text"
+                      placeholder="hyperLink"
+                      value={lesson?.friday?.hyperLink }
+                      onChange={(e) => {
+                        changeLessonLinkData(e, index, "friday");
+                      }}
+                    />
+                  )}
                 </td>
                 {/* saturday */}
                 <td className="px-6 py-4">
                   <input
                     type="text"
                     className="border-black	border-2"
-                    defaultValue={lesson.saturday.lesson}
+                    value={lesson.saturday.lesson}
                     onChange={(e) => {
                       changeLessonData(e, index, "saturday");
                     }}
                   />
+                  {isHyperLink && (
+                    <input
+                      type="text"
+                      placeholder="hyperLink"
+                      value={lesson?.saturday?.hyperLink }
+                      onChange={(e) => {
+                        changeLessonLinkData(e, index, "saturday");
+                      }}
+                    />
+                  )}
+                </td>
+                <td className="px-6 py-4">
+                  <button onClick={()=>{deleteRow(index)}} className="bg-red-600 text-white">Видалити</button>
                 </td>
               </tr>
             ))}
